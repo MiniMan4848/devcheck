@@ -8,6 +8,9 @@ const page = await browser.newPage();
 
 export async function getDetails(url) {
   var totalCreationCount = 0;
+  var allDates = [];
+  var allCaps = [];
+  var allNames = [];
 
   // Go to the page and wait until it's mostly idle
   await page.goto(url, { waitUntil: "networkidle2" });
@@ -55,6 +58,26 @@ export async function getDetails(url) {
   // count how many coins they've made
   await page.click("div.cursor-pointer:nth-child(2)");
   await page.waitForSelector(".max-w-\\[400px\\]");
+  await new Promise((resolve) => setTimeout(resolve, 35));
+
+  // get last 3 coins details
+  for (let i = 1; i < 4; i++) {
+    const name = await getData(
+      `.max-w-\\[400px\\] > a:nth-child(${i}) > div:nth-child(1) > div:nth-child(2) > p:nth-child(4) > span:nth-child(1)`
+    );
+    allNames.push(name);
+
+    const dates = await getData(
+      `.max-w-\\[400px\\] > a:nth-child(${i}) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)`
+    );
+    allDates.push(dates);
+
+    var mcap = await getData(
+      `.max-w-\\[400px\\] > a:nth-child(${i}) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)`
+    )
+    mcap = mcap.map((cap) => cap.replace("market cap: ", ""));
+    allCaps.push(mcap);
+  }
 
   // Fetch the initial class name of the button
   var nextButtonClassName = await (
@@ -102,6 +125,9 @@ export async function getDetails(url) {
     tokensCreated: totalCreationCount,
     releventHoldingTokenNames: validTokenNames,
     relevantHoldingAmounts: tokensMoreThanPointOne,
+    lastThreeNames: allNames.flat(),
+    lastThreeDates: allDates.flat(),
+    lastThreeCaps: allCaps.flat(),
   };
 }
 
