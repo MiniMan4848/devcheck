@@ -3,7 +3,7 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
 puppeteer.use(StealthPlugin());
 
-const browser = await puppeteer.launch({ headless: false, slowMo: 10 });
+const browser = await puppeteer.launch({ headless: false, slowMo: 5 });
 const page = await browser.newPage();
 
 export async function getDetails(url) {
@@ -23,6 +23,36 @@ export async function getDetails(url) {
 
   await page.click(".inline-flex");
   await page.click("#btn-accept-all");
+
+  // check current coin holdings worth more than 0.1 SOL
+  await page.click(
+    "div.flex-1:nth-child(2) > div:nth-child(1) > div:nth-child(1)"
+  );
+  await page.waitForSelector(".justify-items-right > div:nth-child(2)");
+  await new Promise((resolve) => setTimeout(resolve, 45));
+
+  // get SOL amount
+  const tokenName = await getData(
+    "div.min-w-\\[350px\\] > div:nth-child(2) > div:nth-child(1)"
+  );
+  const amountSol = await getData(
+    "div.min-w-\\[350px\\] > div:nth-child(2) > div:nth-child(2)"
+  );
+
+  var validTokenNames = [];
+  var tokensMoreThanPointOne = [];
+
+  for (let i = 0; i < amountSol.length; i++) {
+    // what a function parse float is lmfao
+    const comparableValues = parseFloat(amountSol[i]);
+
+    if (comparableValues >= 0.1) {
+      tokensMoreThanPointOne.push(amountSol[i]);
+      validTokenNames.push(tokenName[i]);
+    }
+  }
+
+  // count how many coins they've made
   await page.click("div.cursor-pointer:nth-child(2)");
   await page.waitForSelector(".max-w-\\[400px\\]");
 
@@ -48,8 +78,6 @@ export async function getDetails(url) {
         (as) => as.length
       );
       totalCreationCount += pageCount;
-      console.log("Page count: " + pageCount);
-      console.log("totalCreationCount: " + totalCreationCount);
 
       // if there are no a tags on the page, break the loop
       if (pageCount === 0) {
@@ -64,9 +92,6 @@ export async function getDetails(url) {
     totalCreationCount += pageCount;
   }
 
-  console.log("totalCreationCount: " + totalCreationCount);
-  console.log("pageCount: " + pageCount);
-
   await browser.close();
 
   return {
@@ -75,6 +100,8 @@ export async function getDetails(url) {
     followers: followers,
     likes: likes,
     tokensCreated: totalCreationCount,
+    releventHoldingTokenNames: validTokenNames,
+    relevantHoldingAmounts: tokensMoreThanPointOne,
   };
 }
 
@@ -85,15 +112,3 @@ async function getData(selector) {
     );
   }, selector);
 }
-
-/*
-count how many released: 
-
-click div.cursor-pointer:nth-child(2)
-go to .max-w-\[400px\]
-count how many a tags underneath it
-click button.text-sm:nth-child(3)
-wait for the page to load
-count again
-keep going until the button class name changes
-*/
