@@ -6,6 +6,7 @@ import {
   ApplicationCommandOptionType,
   REST,
   Routes,
+  EmbedBuilder,
 } from "discord.js";
 import dotenv from "dotenv";
 import { getDetails } from "./getDetails.js";
@@ -63,10 +64,10 @@ client.on("interactionCreate", (interaction) => {
   if (!interaction.isChatInputCommand()) return;
   const CA = interaction.options.get("ca").value;
 
-  interaction.reply(`CA entered: ${CA}`);
+  interaction.deferReply();
 
   const webScrape = async () => {
-    const browser = await puppeteer.launch({ headless: true, slowMo: 1 });
+    const browser = await puppeteer.launch({ headless: false, slowMo: 1 });
     const page = await browser.newPage();
 
     await page.goto(`https://pump.fun/${CA}`, { waitUntil: "networkidle2" });
@@ -82,6 +83,30 @@ client.on("interactionCreate", (interaction) => {
     const checkURL = await page.url();
     await browser.close();
     const output = await getDetails(checkURL);
+    const w = "`";
+
+    const embed = new EmbedBuilder()
+      .setColor(0x360059)
+      .setFooter({ text: "By MiniMan" })
+      .addFields({
+        name: "-- Developer Info-- ",
+        value: `**Name: ** ${output.name}
+    **Wallet: ** [${output.wallet}](https://solscan.io/account/${output.wallet})
+    **Followers: ** ${w}${output.followers}${w}
+    **Likes: ** ${w}${output.likes}${w} \n
+    **Token holdings more than 0.1SOL: ** ${w}${output.releventHoldingTokenNames}${w}
+    **Their amounts: ** ${w}${output.relevantHoldingAmounts}${w}\n
+    **Last 3 tokens**
+    - **Names: ** ${w}${output.lastThreeNames}${w}
+    - **Dates: ** ${w}${output.lastThreeDates}${w}
+    - **Market caps: ** ${w}${output.lastThreeCaps}${w}\n
+    **Tokens Created: ** ${w}${output.tokensCreated}${w}
+    **Total Migrated Tokens: ** ${w}${output.totalMigrated}${w} \n
+    **Migration Rate: ** ${w}${output.migrationRate}${w}`,
+        inline: false,
+      });
+
+    interaction.editReply({ embeds: [embed] });
     console.log(output);
   };
 

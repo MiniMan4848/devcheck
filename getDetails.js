@@ -4,7 +4,7 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 puppeteer.use(StealthPlugin());
 
 export async function getDetails(url) {
-  const browser = await puppeteer.launch({ headless: true, slowMo: 5 });
+  const browser = await puppeteer.launch({ headless: false, slowMo: 8 });
   const page = await browser.newPage();
 
   async function getData(selector) {
@@ -27,11 +27,16 @@ export async function getDetails(url) {
   const name = await getData(
     ".align-end > div:nth-child(1) > div:nth-child(1)"
   );
+
   const wallet = await getData(".sm\\:text-sm");
-  const followers = await getData(
+
+  const followersRaw = await getData(
     ".align-end > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)"
   );
-  const likes = await getData(".text-red-500");
+  const followers = followersRaw[0] ? followersRaw[0].replace(/\D/g, "") : "0";
+
+  const likesRaw = await getData(".text-red-500");
+  const likes = likesRaw[0] ? likesRaw[0].replace(/\D/g, "") : "0";
 
   await page.click(".inline-flex");
   await page.click("#btn-accept-all");
@@ -60,7 +65,8 @@ export async function getDetails(url) {
 
     if (comparableValues >= 0.1) {
       tokensMoreThanPointOne.push(amountSol[i]);
-      validTokenNames.push(tokenName[i]);
+      const tokenNameWithoutNumbers = tokenName[i].replace(/^\d+\s*/, "");
+      validTokenNames.push(tokenNameWithoutNumbers);
     }
   }
 
