@@ -7,3 +7,7 @@ async function main() {
 }
 
 main();
+
+/*
+migration rate (%) = (migrated/total) * 100
+*/

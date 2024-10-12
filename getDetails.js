@@ -8,6 +8,7 @@ const page = await browser.newPage();
 
 export async function getDetails(url) {
   var totalCreationCount = 0;
+  var totalMigrationCount = 0;
   var allDates = [];
   var allCaps = [];
   var allNames = [];
@@ -74,9 +75,9 @@ export async function getDetails(url) {
 
     var mcap = await getData(
       `.max-w-\\[400px\\] > a:nth-child(${i}) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)`
-    )
+    );
     mcap = mcap.map((cap) => cap.replace("market cap: ", ""));
-    allCaps.push(...mcap);
+    allCaps.push(parseFloat(...mcap) + "K");
   }
 
   // Fetch the initial class name of the button
@@ -96,11 +97,16 @@ export async function getDetails(url) {
       await page.click("button.text-sm:nth-child(3)");
       // wait for page to load
       await page.waitForSelector(".max-w-\\[400px\\]");
+      var pageMigrationCount = await page.$$eval(
+        'img[src*="/_next/image?url=%2Fmigrated.png&w=48&q=75"]',
+        (images) => images.length
+      );
       var pageCount = await page.$$eval(
         ".max-w-\\[400px\\] > a",
         (as) => as.length
       );
       totalCreationCount += pageCount;
+      totalMigrationCount += pageMigrationCount;
 
       // if there are no a tags on the page, break the loop
       if (pageCount === 0) {
@@ -108,11 +114,16 @@ export async function getDetails(url) {
       }
     }
   } else {
+    var pageMigrationCount = await page.$$eval(
+      'img[src*="/_next/image?url=%2Fmigrated.png&w=48&q=75"]',
+      (images) => images.length
+    );
     var pageCount = await page.$$eval(
       ".max-w-\\[400px\\] > a",
       (as) => as.length
     );
     totalCreationCount += pageCount;
+    totalMigrationCount += pageMigrationCount;
   }
 
   await browser.close();
@@ -128,6 +139,7 @@ export async function getDetails(url) {
     lastThreeNames: allNames,
     lastThreeDates: allDates,
     lastThreeCaps: allCaps,
+    totalMigrated: totalMigrationCount,
   };
 }
 
