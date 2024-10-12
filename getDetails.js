@@ -65,18 +65,18 @@ export async function getDetails(url) {
     const name = await getData(
       `.max-w-\\[400px\\] > a:nth-child(${i}) > div:nth-child(1) > div:nth-child(2) > p:nth-child(4) > span:nth-child(1)`
     );
-    allNames.push(name);
+    allNames.push(...name);
 
     const dates = await getData(
       `.max-w-\\[400px\\] > a:nth-child(${i}) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(2)`
     );
-    allDates.push(dates);
+    allDates.push(...dates);
 
     var mcap = await getData(
       `.max-w-\\[400px\\] > a:nth-child(${i}) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)`
     )
     mcap = mcap.map((cap) => cap.replace("market cap: ", ""));
-    allCaps.push(mcap);
+    allCaps.push(...mcap);
   }
 
   // Fetch the initial class name of the button
@@ -125,9 +125,9 @@ export async function getDetails(url) {
     tokensCreated: totalCreationCount,
     releventHoldingTokenNames: validTokenNames,
     relevantHoldingAmounts: tokensMoreThanPointOne,
-    lastThreeNames: allNames.flat(),
-    lastThreeDates: allDates.flat(),
-    lastThreeCaps: allCaps.flat(),
+    lastThreeNames: allNames,
+    lastThreeDates: allDates,
+    lastThreeCaps: allCaps,
   };
 }
 
