@@ -3,10 +3,18 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
 puppeteer.use(StealthPlugin());
 
-const browser = await puppeteer.launch({ headless: true, slowMo: 5 });
-const page = await browser.newPage();
-
 export async function getDetails(url) {
+  const browser = await puppeteer.launch({ headless: false, slowMo: 5 });
+  const page = await browser.newPage();
+
+  async function getData(selector) {
+    return await page.evaluate((selector) => {
+      return Array.from(document.querySelectorAll(selector)).map((x) =>
+        x.textContent.trim()
+      );
+    }, selector);
+  }
+
   var totalCreationCount = 0;
   var totalMigrationCount = 0;
   var allDates = [];
@@ -94,6 +102,13 @@ export async function getDetails(url) {
       nextButtonClassName ===
       "text-sm text-slate-50 hover:font-bold hover:bg-transparent hover:text-slate-50"
     ) {
+      // refetch button class name, fixes profiles with many tokens
+      var nextButtonClassName = await (
+        await (
+          await page.$("button.text-sm:nth-child(3)")
+        ).getProperty("className")
+      ).jsonValue();
+
       await page.click("button.text-sm:nth-child(3)");
       // wait for page to load
       await page.waitForSelector(".max-w-\\[400px\\]");
@@ -145,12 +160,4 @@ export async function getDetails(url) {
     totalMigrated: totalMigrationCount,
     migrationRate: migrationRate,
   };
-}
-
-async function getData(selector) {
-  return await page.evaluate((selector) => {
-    return Array.from(document.querySelectorAll(selector)).map((x) =>
-      x.textContent.trim()
-    );
-  }, selector);
 }
