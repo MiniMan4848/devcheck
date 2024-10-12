@@ -3,7 +3,7 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
 puppeteer.use(StealthPlugin());
 
-const browser = await puppeteer.launch({ headless: false, slowMo: 5 });
+const browser = await puppeteer.launch({ headless: true, slowMo: 5 });
 const page = await browser.newPage();
 
 export async function getDetails(url) {
@@ -126,6 +126,9 @@ export async function getDetails(url) {
     totalMigrationCount += pageMigrationCount;
   }
 
+  const migrationRate =
+    ((totalMigrationCount / totalCreationCount) * 100).toFixed(2) + "%";
+
   await browser.close();
 
   return {
@@ -140,6 +143,7 @@ export async function getDetails(url) {
     lastThreeDates: allDates,
     lastThreeCaps: allCaps,
     totalMigrated: totalMigrationCount,
+    migrationRate: migrationRate,
   };
 }
 
