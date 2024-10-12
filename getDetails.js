@@ -4,7 +4,7 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 puppeteer.use(StealthPlugin());
 
 export async function getDetails(url) {
-  const browser = await puppeteer.launch({ headless: false, slowMo: 5 });
+  const browser = await puppeteer.launch({ headless: true, slowMo: 5 });
   const page = await browser.newPage();
 
   async function getData(selector) {

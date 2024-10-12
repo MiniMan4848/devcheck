@@ -25,7 +25,8 @@ const client = new Client({
 const commands = [
   {
     name: "check",
-    description: "investigate the dev of a pumpfun token (the more tokens made, the longer a response will take)",
+    description:
+      "investigate the dev of a pumpfun token (the more tokens made, the longer a response will take)",
     options: [
       {
         name: "ca",
@@ -65,7 +66,7 @@ client.on("interactionCreate", (interaction) => {
   interaction.reply(`CA entered: ${CA}`);
 
   const webScrape = async () => {
-    const browser = await puppeteer.launch({ headless: false, slowMo: 1 });
+    const browser = await puppeteer.launch({ headless: true, slowMo: 1 });
     const page = await browser.newPage();
 
     await page.goto(`https://pump.fun/${CA}`, { waitUntil: "networkidle2" });
