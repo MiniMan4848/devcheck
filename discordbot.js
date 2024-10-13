@@ -83,7 +83,8 @@ client.on("interactionCreate", (interaction) => {
     const checkURL = await page.url();
     await browser.close();
     const output = await getDetails(checkURL);
-    const w = "`";
+
+    const bs = "`";
 
     if (output.releventHoldingTokenNames.length > 0) {
       const embed = new EmbedBuilder()
@@ -93,18 +94,18 @@ client.on("interactionCreate", (interaction) => {
           name: "-- Developer Info -- ",
           value: `**Name: ** ${output.name}
     **Wallet: ** [${output.wallet}](https://solscan.io/account/${output.wallet})
-    **Followers: ** ${w}${output.followers}${w}
-    **Likes: ** ${w}${output.likes}${w} \n
-    **Token holdings more than 0.1SOL: ** ${w}${output.releventHoldingTokenNames}${w}
-    **Their amounts: ** ${w}${output.relevantHoldingAmounts}${w}\n
+    **Followers: ** ${bs}${output.followers}${bs}
+    **Likes: ** ${bs}${output.likes}${bs} \n
+    **Token holdings more than 0.1SOL: ** ${bs}${output.releventHoldingTokenNames}${bs}
+    **Their amounts: ** ${bs}${output.relevantHoldingAmounts}${bs}\n
     **-- Last 3 tokens --**
-    **Names: ** ${w}${output.lastThreeNames}${w}
-    **Dates: ** ${w}${output.lastThreeDates}${w}
-    **Market caps: ** ${w}${output.lastThreeCaps}${w}\n
+    **Names: ** ${bs}${output.lastThreeNames}${bs}
+    **Dates: ** ${bs}${output.lastThreeDates}${bs}
+    **Market caps: ** ${bs}${output.lastThreeCaps}${bs}\n
     **-- Stats --**
-    **Tokens Created: ** ${w}${output.tokensCreated}${w}
-    **Total Migrated Tokens: ** ${w}${output.totalMigrated}${w}
-    **Migration Rate: ** ${w}${output.migrationRate}${w}`,
+    **Tokens Created: ** ${bs}${output.tokensCreated}${bs}
+    **Total Migrated Tokens: ** ${bs}${output.totalMigrated}${bs}
+    **Migration Rate: ** ${bs}${output.migrationRate}${bs}`,
           inline: false,
         });
 
@@ -117,16 +118,16 @@ client.on("interactionCreate", (interaction) => {
           name: "-- Developer Info -- ",
           value: `**Name: ** ${output.name}
   **Wallet: ** [${output.wallet}](https://solscan.io/account/${output.wallet})
-  **Followers: ** ${w}${output.followers}${w}
-  **Likes: ** ${w}${output.likes}${w} \n
+  **Followers: ** ${bs}${output.followers}${bs}
+  **Likes: ** ${bs}${output.likes}${bs} \n
   **-- Last 3 tokens --**
-  **Names: ** ${w}${output.lastThreeNames}${w}
-  **Dates: ** ${w}${output.lastThreeDates}${w}
-  **Market caps: ** ${w}${output.lastThreeCaps}${w}\n
+  **Names: ** ${bs}${output.lastThreeNames}${bs}
+  **Dates: ** ${bs}${output.lastThreeDates}${bs}
+  **Market caps: ** ${bs}${output.lastThreeCaps}${bs}\n
   **-- Stats --**
-  **Tokens Created: ** ${w}${output.tokensCreated}${w}
-  **Total Migrated Tokens: ** ${w}${output.totalMigrated}${w}
-  **Migration Rate: ** ${w}${output.migrationRate}${w}`,
+  **Tokens Created: ** ${bs}${output.tokensCreated}${bs}
+  **Total Migrated Tokens: ** ${bs}${output.totalMigrated}${bs}
+  **Migration Rate: ** ${bs}${output.migrationRate}${bs}`,
           inline: false,
         });
 
