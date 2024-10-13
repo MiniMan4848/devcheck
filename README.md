@@ -1,12 +1,30 @@
-A discord bot i threw together to get details about a pump.fun dev from the contract address of one of their tokens
 
-I am aware that it could definetly be more efficient and the code is not the cleanest.
+# DevCheck
 
-npm i puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+A discord bot i threw together to get details about a pump.fun dev from the contract address of one of their tokens - my first time webscraping.
 
-need node.js
+I am aware that it could be faster and more efficient and that the code is not the cleanest.
 
-Make a .env and fill in these fields
-TOKEN
-APP_ID
-GUILD_ID
+## Environment Variables
+
+Make a .env file and fill it in with the corresponding variables:
+
+* `TOKEN` 
+* `APP_ID` 
+* `GUILD_ID`
+
+## Dependencies
+
+These are the following libraries needed to use DevCheck.
+
+```
+npm install discord.js
+npm install dotenv
+npm install puppeteer
+npm install puppeteer-extra
+npm install puppeteer-extra-plugin-stealth
+```
+and then run the following command to start the bot (ensure you have node.js)
+```
+node discordbot
+```
