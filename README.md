@@ -3,8 +3,6 @@
 
 A discord bot i threw together to get details about a pump.fun dev from the contract address of one of their tokens - my first time webscraping.
 
-I am aware that it could be faster and more efficient and that the code is not the cleanest.
-
 ## Environment Variables
 
 Make a .env file and fill it in with the corresponding variables:
@@ -28,3 +26,6 @@ and then run the following command to start the bot (ensure you have node.js)
 ```
 node discordbot
 ```
+## Output
+![image](https://github.com/user-attachments/assets/69d7275a-7873-449e-a7b6-784f25278f0c)
+
